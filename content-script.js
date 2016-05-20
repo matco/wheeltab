@@ -33,7 +33,8 @@ function draw_item(tab, index) {
 	//style
 	item.style.fontFamily = 'Arial';
 	item.style.fontSize = '14px';
-	item.style.padding = '2px';
+	item.style.whiteSpace = 'nowrap';
+	item.style.padding = '4px';
 	item.style.margin = '0';
 	if(tab.active) {
 		selected_item = index;
@@ -96,9 +97,11 @@ function load_menu(event) {
 		//create menu
 		debug('wheeltab - load menu');
 		menu = document.createElement('ul');
+		menu.style.minWidth = '250px';
+		menu.style.maxWidth = '500px';
 		menu.style.position = 'fixed';
 		menu.style.listStyle = 'none';
-		menu.style.textAlign = 'center';
+		menu.style.textAlign = 'left';
 		menu.style.backgroundColor = 'white';
 		menu.style.margin = '0';
 		menu.style.padding = '0';
