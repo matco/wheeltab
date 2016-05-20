@@ -14,11 +14,15 @@ var selected_item; //index of selected item in menu
 
 var prevent_context_menu;
 
+function filter_tab(tab) {
+	return !tab.url.startsWith('chrome');
+}
+
 function draw_item(tab, index) {
 	var item = document.createElement('li');
 	item.dataset.id = tab.id;
 	//icon
-	if(tab.icon && !tab.icon.startsWith('chrome')) {
+	if(tab.icon) {
 		var icon = document.createElement('img');
 		icon.setAttribute('src', tab.icon);
 		icon.setAttribute('alt', 'Tab icon');
@@ -140,7 +144,12 @@ chrome.runtime.onMessage.addListener(
 		debug('wheeltab - on message', message);
 		switch(message.event) {
 			case 'tabs':
-				Array.prototype.map.call(message.tabs, draw_item).forEach(Node.prototype.appendChild, menu);
+				var tabs = Array.prototype.slice.call(message.tabs);
+				//exclude internal chrome web pages and draw other tabs in menu
+				tabs
+					.filter(filter_tab)
+					.map(draw_item)
+					.forEach(Node.prototype.appendChild, menu);
 				break;
 		}
 	}

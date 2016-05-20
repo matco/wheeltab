@@ -7,11 +7,14 @@ chrome.runtime.onInstalled.addListener(function(details) {
 		chrome.windows.getAll({populate: true}, function(windows) {
 			windows.forEach(function(win) {
 				win.tabs.forEach(function(tab) {
-					try {
-						chrome.tabs.executeScript(tab.id, {file: script});
-					}
-					catch(exception) {
-						//this will not work for chrome internal web page
+					//exclude internal chrome web pages
+					if(!tab.url.startsWith('chrome')) {
+						try {
+							chrome.tabs.executeScript(tab.id, {file: script});
+						}
+						catch(exception) {
+							//this may fail for some kind of tab
+						}
 					}
 				});
 			});
