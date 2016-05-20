@@ -27,7 +27,7 @@ chrome.runtime.onMessage.addListener(
 		console.log('wheeltab bg - on message', message);
 		switch(message.task) {
 			case 'retrieve_tabs':
-				chrome.tabs.query({}, function(tabs) {
+				chrome.tabs.query({currentWindow : true}, function(tabs) {
 					var simple_tabs = tabs.map(function(tab) {
 						return {id : tab.id, title : tab.title, url : tab.url, icon : tab.favIconUrl, active : tab.active};
 					});
