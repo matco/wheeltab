@@ -131,7 +131,7 @@ function close_menu(event) {
 	window.removeEventListener('mouseup', close_menu);
 	//ask to select tab
 	debug('wheeltab - go to tab ' + selected_item);
-	if(selected_item) {
+	if(selected_item !== undefined) {
 		var tab_id = parseInt(menu.children[selected_item].dataset.id);
 		chrome.runtime.sendMessage({task : 'select_tab', id : tab_id});
 	}
