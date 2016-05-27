@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Update icons.
 
 ### Fixed
-- Disable injection of extension in open tabs for browsers that don't support it.
+- After installation, disable injection of extension code in open tabs for browsers that don't support it.
 
 ## [0.0.2] - 2016-05-20
 ### Added
