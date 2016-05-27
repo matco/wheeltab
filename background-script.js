@@ -1,5 +1,14 @@
 'use strict';
 
+//set to true to enable debug to console
+var debug_mode = false;
+
+function debug() {
+	if(debug_mode) {
+		console.log.apply(console, arguments);
+	}
+}
+
 //manually inject content script code after installation or update
 //TODO this is only supported by Chrome
 if(chrome.runtime.onInstalled) {
@@ -27,14 +36,14 @@ if(chrome.runtime.onInstalled) {
 
 chrome.runtime.onMessage.addListener(
 	function(message) {
-		console.log('wheeltab bg - on message', message);
+		debug('wheeltab bg - on message', message);
 		switch(message.task) {
 			case 'retrieve_tabs':
 				chrome.tabs.query({currentWindow : true}, function(tabs) {
 					var simple_tabs = tabs.map(function(tab) {
 						return {id : tab.id, title : tab.title, url : tab.url, icon : tab.favIconUrl, active : tab.active};
 					});
-					console.log('wheeltab bg - return tabs', simple_tabs);
+					debug('wheeltab bg - return tabs', simple_tabs);
 					send({event : 'tabs', tabs : simple_tabs});
 				});
 			case 'select_tab':
