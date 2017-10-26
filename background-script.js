@@ -1,7 +1,7 @@
 'use strict';
 
 //set to true to enable debug to console
-var debug_mode = false;
+const debug_mode = false;
 
 function debug() {
 	if(debug_mode) {
@@ -14,7 +14,7 @@ function debug() {
 if(chrome.runtime.onInstalled) {
 	chrome.runtime.onInstalled.addListener(function(details) {
 		if(details.reason === 'install') {
-			var script = chrome.runtime.getManifest().content_scripts[0].js[0];
+			let script = chrome.runtime.getManifest().content_scripts[0].js[0];
 			chrome.windows.getAll({populate: true}, function(windows) {
 				windows.forEach(function(win) {
 					win.tabs.forEach(function(tab) {
@@ -40,7 +40,7 @@ chrome.runtime.onMessage.addListener(
 		switch(message.task) {
 			case 'retrieve_tabs':
 				chrome.tabs.query({currentWindow : true}, function(tabs) {
-					var simple_tabs = tabs.map(function(tab) {
+					let simple_tabs = tabs.map(function(tab) {
 						return {id : tab.id, title : tab.title, url : tab.url, icon : tab.favIconUrl, active : tab.active};
 					});
 					debug('wheeltab bg - return tabs', simple_tabs);

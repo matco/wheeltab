@@ -1,7 +1,7 @@
 'use strict';
 
 //set to true to enable debug to console
-var debug_mode = false;
+const debug_mode = false;
 
 function debug() {
 	if(debug_mode) {
@@ -9,21 +9,21 @@ function debug() {
 	}
 }
 
-var menu; //current menu
-var selected_item; //index of selected item in menu
+let menu; //current menu
+let selected_item; //index of selected item in menu
 
-var prevent_context_menu;
+let prevent_context_menu;
 
 function filter_tab(tab) {
 	return !tab.url.startsWith('chrome');
 }
 
 function draw_item(tab, index) {
-	var item = document.createElement('li');
+	let item = document.createElement('li');
 	item.dataset.id = tab.id;
 	//icon
 	if(tab.icon) {
-		var icon = document.createElement('img');
+		let icon = document.createElement('img');
 		icon.setAttribute('src', tab.icon);
 		icon.setAttribute('alt', 'Tab icon');
 		icon.style.width = '16px';
@@ -132,7 +132,7 @@ function close_menu(event) {
 	//ask to select tab
 	debug('wheeltab - go to tab ' + selected_item);
 	if(selected_item !== undefined) {
-		var tab_id = parseInt(menu.children[selected_item].dataset.id);
+		let tab_id = parseInt(menu.children[selected_item].dataset.id);
 		chrome.runtime.sendMessage({task : 'select_tab', id : tab_id});
 	}
 	//destroy menu
@@ -144,7 +144,7 @@ chrome.runtime.onMessage.addListener(
 		debug('wheeltab - on message', message);
 		switch(message.event) {
 			case 'tabs':
-				var tabs = Array.prototype.slice.call(message.tabs);
+				let tabs = Array.prototype.slice.call(message.tabs);
 				//exclude internal chrome web pages and draw other tabs in menu
 				tabs
 					.filter(filter_tab)
