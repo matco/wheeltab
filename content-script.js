@@ -37,7 +37,9 @@ function draw_item(tab, index) {
 	//style
 	item.style.fontFamily = 'Arial';
 	item.style.fontSize = '14px';
+	item.style.overflow = 'hidden';
 	item.style.whiteSpace = 'nowrap';
+	item.style.textOverflow = 'ellipsis';
 	item.style.padding = '4px';
 	item.style.margin = '0';
 	if(tab.active) {
