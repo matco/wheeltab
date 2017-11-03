@@ -99,7 +99,7 @@ function manage_wheel(event) {
 }
 
 function load_menu(event) {
-	if(event.button == 2) {
+	if(event.button === 2) {
 		//create menu
 		debug('wheeltab - load menu');
 		menu = document.createElement('ul');
