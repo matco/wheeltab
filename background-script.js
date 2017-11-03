@@ -10,7 +10,6 @@ function debug() {
 }
 
 //manually inject content script code after installation or update
-//TODO this is only supported by Chrome
 if(chrome.runtime.onInstalled) {
 	chrome.runtime.onInstalled.addListener(function(details) {
 		debug('wheeltab bg - on installed', details);
