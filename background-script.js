@@ -13,17 +13,19 @@ function debug() {
 //TODO this is only supported by Chrome
 if(chrome.runtime.onInstalled) {
 	chrome.runtime.onInstalled.addListener(function(details) {
+		debug('wheeltab bg - on installed', details);
 		if(details.reason === 'install') {
 			let script = chrome.runtime.getManifest().content_scripts[0].js[0];
 			chrome.windows.getAll({populate: true}, function(windows) {
 				windows.forEach(function(win) {
 					win.tabs.forEach(function(tab) {
-						//exclude internal chrome web pages
-						if(!tab.url.startsWith('chrome')) {
+						//exclude internal chrome/firefox web pages
+						if(!tab.url.startsWith('chrome') && !tab.url.startsWith('about')) {
 							try {
 								chrome.tabs.executeScript(tab.id, {file: script});
 							}
 							catch(exception) {
+								console.error(exception);
 								//this may fail for some kind of tab
 							}
 						}
