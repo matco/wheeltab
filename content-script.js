@@ -1,5 +1,3 @@
-'use strict';
-
 //set to true to enable debug to console
 const debug_mode = false;
 
