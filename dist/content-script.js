@@ -125,7 +125,7 @@ function load_menu(event) {
 				.forEach(Node.prototype.appendChild, menu);
 		});
 		//add listeners
-		window.addEventListener('mouseup', close_menu);
+		window.addEventListener('mouseup', close_menu, {once: true});
 		window.addEventListener('wheel', manage_wheel, {passive: false});
 	}
 }
@@ -134,7 +134,6 @@ function close_menu() {
 	debug('wheeltab - close menu');
 	//remove listeners
 	window.removeEventListener('wheel', manage_wheel);
-	window.removeEventListener('mouseup', close_menu);
 	//ask to select tab
 	debug(`wheeltab - go to tab ${selected_item}`);
 	if(selected_item !== undefined) {
