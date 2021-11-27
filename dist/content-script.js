@@ -53,7 +53,7 @@ function draw_item(tab, index) {
 
 function select_item(index) {
 	debug(`wheeltab - select item ${index}`);
-	Array.prototype.forEach.call(menu.children, function(item, i) {
+	Array.prototype.forEach.call(menu.children, (item, i) => {
 		if(i === index) {
 			item.style.backgroundColor = '#333';
 			item.style.color = 'white';
@@ -148,7 +148,7 @@ document.addEventListener('mousedown', load_menu);
 
 document.addEventListener(
 	'contextmenu',
-	function(event) {
+	event => {
 		if(prevent_context_menu) {
 			prevent_context_menu = false;
 			event.preventDefault();

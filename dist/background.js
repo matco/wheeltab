@@ -9,42 +9,39 @@ function debug() {
 
 //manually inject content script code after installation or update
 if(chrome.runtime.onInstalled) {
-	chrome.runtime.onInstalled.addListener(function(details) {
+	chrome.runtime.onInstalled.addListener(details => {
 		debug('wheeltab bg - on installed', details);
 		if(details.reason === 'install') {
 			const script = chrome.runtime.getManifest().content_scripts[0].js[0];
-			chrome.windows.getAll({populate: true}, function(windows) {
-				windows.forEach(function(win) {
-					win.tabs.forEach(function(tab) {
-						//exclude internal chrome/firefox web pages
-						if(!tab.url.startsWith('chrome') && !tab.url.startsWith('about')) {
-							try {
-								chrome.scripting.executeScript({
-									target: {tabId: tab.id},
-									files: [script]
-								});
-							}
-							catch(exception) {
-								console.error(exception);
-								//this may fail for some kind of tab
-							}
+			chrome.windows.getAll({populate: true}, windows => {
+				windows
+					.flatMap(w => w.tabs)
+					//exclude internal chrome/firefox web pages
+					.filter(t => !t.url.startsWith('chrome') && !t.url.startsWith('about'))
+					.forEach(tab => {
+						try {
+							chrome.scripting.executeScript({
+								target: {tabId: tab.id},
+								files: [script]
+							});
+						}
+						catch(exception) {
+							console.error(exception);
+							//this may fail for some kind of tab
 						}
 					});
-				});
 			});
 		}
 	});
 }
 
 chrome.runtime.onMessage.addListener(
-	function(message, _, send) {
+	(message, _, send) => {
 		debug('wheeltab bg - on message', message);
 		switch(message.task) {
 			case 'retrieve_tabs':
-				chrome.tabs.query({currentWindow: true}, function(tabs) {
-					const simple_tabs = tabs.map(function(tab) {
-						return {id: tab.id, title: tab.title, url: tab.url, icon: tab.favIconUrl, active: tab.active};
-					});
+				chrome.tabs.query({currentWindow: true}, tabs => {
+					const simple_tabs = tabs.map(t => ({id: t.id, title: t.title, url: t.url, icon: t.favIconUrl, active: t.active}));
 					debug('wheeltab bg - return tabs', simple_tabs);
 					send(simple_tabs);
 				});
