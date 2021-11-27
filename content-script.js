@@ -95,7 +95,6 @@ function manage_wheel(event) {
 		select_item(selected_item);
 	}
 	event.stopPropagation();
-	event.preventDefault();
 }
 
 function load_menu(event) {
@@ -119,7 +118,13 @@ function load_menu(event) {
 		//reset selected item
 		selected_item = undefined;
 		//ask for tabs
-		chrome.runtime.sendMessage({task : 'retrieve_tabs'});
+		chrome.runtime.sendMessage({task : 'retrieve_tabs'}, tabs => {
+			//exclude internal chrome web pages and draw other tabs in menu
+			tabs
+				.filter(filter_tab)
+				.map(draw_item)
+				.forEach(Node.prototype.appendChild, menu);
+		});
 		//add listeners
 		window.addEventListener('mouseup', close_menu);
 		window.addEventListener('wheel', manage_wheel);
@@ -140,22 +145,6 @@ function close_menu(event) {
 	//destroy menu
 	document.body.removeChild(menu);
 }
-
-chrome.runtime.onMessage.addListener(
-	function(message) {
-		debug('wheeltab - on message', message);
-		switch(message.event) {
-			case 'tabs':
-				let tabs = Array.prototype.slice.call(message.tabs);
-				//exclude internal chrome web pages and draw other tabs in menu
-				tabs
-					.filter(filter_tab)
-					.map(draw_item)
-					.forEach(Node.prototype.appendChild, menu);
-				break;
-		}
-	}
-);
 
 document.addEventListener('mousedown', load_menu);
 

@@ -1,7 +1,7 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"name": "Wheeltab",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"default_locale": "en",
 	"description": "__MSG_extension_description__",
 	"icons": {
@@ -10,14 +10,9 @@
 		"128": "icons/icon128.png"
 	},
 	"author": "Matthieu Corageoud",
-	"applications": {
-		"gecko": {
-			"id": "wheeltab@matco.name",
-			"strict_min_version": "45.0"
-		}
-	},
 	"permissions": [
-		"tabs", "<all_urls>"
+		"tabs",
+		"scripting"
 	],
 	"content_scripts": [
 		{
@@ -26,6 +21,6 @@
 		}
 	],
 	"background": {
-		"scripts": ["background-script.js"]
+		"service_worker": "background-script.js"
 	}
 }
