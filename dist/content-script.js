@@ -93,6 +93,7 @@ function manage_wheel(event) {
 		select_item(selected_item);
 	}
 	event.stopPropagation();
+	event.preventDefault();
 }
 
 function load_menu(event) {
@@ -125,7 +126,7 @@ function load_menu(event) {
 		});
 		//add listeners
 		window.addEventListener('mouseup', close_menu);
-		window.addEventListener('wheel', manage_wheel);
+		window.addEventListener('wheel', manage_wheel, {passive: false});
 	}
 }
 
