@@ -12,7 +12,7 @@ if(chrome.runtime.onInstalled) {
 	chrome.runtime.onInstalled.addListener(function(details) {
 		debug('wheeltab bg - on installed', details);
 		if(details.reason === 'install') {
-			let script = chrome.runtime.getManifest().content_scripts[0].js[0];
+			const script = chrome.runtime.getManifest().content_scripts[0].js[0];
 			chrome.windows.getAll({populate: true}, function(windows) {
 				windows.forEach(function(win) {
 					win.tabs.forEach(function(tab) {
@@ -41,16 +41,16 @@ chrome.runtime.onMessage.addListener(
 		debug('wheeltab bg - on message', message);
 		switch(message.task) {
 			case 'retrieve_tabs':
-				chrome.tabs.query({currentWindow : true}, function(tabs) {
-					let simple_tabs = tabs.map(function(tab) {
-						return {id : tab.id, title : tab.title, url : tab.url, icon : tab.favIconUrl, active : tab.active};
+				chrome.tabs.query({currentWindow: true}, function(tabs) {
+					const simple_tabs = tabs.map(function(tab) {
+						return {id: tab.id, title: tab.title, url: tab.url, icon: tab.favIconUrl, active: tab.active};
 					});
 					debug('wheeltab bg - return tabs', simple_tabs);
 					send(simple_tabs);
 				});
 				break;
 			case 'select_tab':
-				chrome.tabs.update(message.id, {active : true});
+				chrome.tabs.update(message.id, {active: true});
 				break;
 			default:
 				debug('wheeltab vg - unknown event', message.task);

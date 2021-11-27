@@ -17,11 +17,11 @@ function filter_tab(tab) {
 }
 
 function draw_item(tab, index) {
-	let item = document.createElement('li');
+	const item = document.createElement('li');
 	item.dataset.id = tab.id;
 	//icon
 	if(tab.icon) {
-		let icon = document.createElement('img');
+		const icon = document.createElement('img');
 		icon.setAttribute('src', tab.icon);
 		icon.setAttribute('alt', 'Tab icon');
 		icon.style.width = '16px';
@@ -52,7 +52,7 @@ function draw_item(tab, index) {
 }
 
 function select_item(index) {
-	debug('wheeltab - select item ' + index);
+	debug(`wheeltab - select item ${index}`);
 	Array.prototype.forEach.call(menu.children, function(item, i) {
 		if(i === index) {
 			item.style.backgroundColor = '#333';
@@ -70,8 +70,8 @@ function manage_wheel(event) {
 	if(menu.style.display !== 'block') {
 		prevent_context_menu = true;
 		//position menu
-		menu.style.left = event.clientX + 'px';
-		menu.style.top = event.clientY + 'px';
+		menu.style.left = `${event.clientX}px`;
+		menu.style.top = `${event.clientY}px`;
 		menu.style.display = 'block';
 	}
 	if(event.deltaY < 0) {
@@ -116,7 +116,7 @@ function load_menu(event) {
 		//reset selected item
 		selected_item = undefined;
 		//ask for tabs
-		chrome.runtime.sendMessage({task : 'retrieve_tabs'}, tabs => {
+		chrome.runtime.sendMessage({task: 'retrieve_tabs'}, tabs => {
 			//exclude internal chrome web pages and draw other tabs in menu
 			tabs
 				.filter(filter_tab)
@@ -129,16 +129,16 @@ function load_menu(event) {
 	}
 }
 
-function close_menu(event) {
+function close_menu() {
 	debug('wheeltab - close menu');
 	//remove listeners
 	window.removeEventListener('wheel', manage_wheel);
 	window.removeEventListener('mouseup', close_menu);
 	//ask to select tab
-	debug('wheeltab - go to tab ' + selected_item);
+	debug(`wheeltab - go to tab ${selected_item}`);
 	if(selected_item !== undefined) {
-		let tab_id = parseInt(menu.children[selected_item].dataset.id);
-		chrome.runtime.sendMessage({task : 'select_tab', id : tab_id});
+		const tab_id = parseInt(menu.children[selected_item].dataset.id);
+		chrome.runtime.sendMessage({task: 'select_tab', id: tab_id});
 	}
 	//destroy menu
 	document.body.removeChild(menu);

@@ -1,0 +1,25 @@
+{
+	"name": "@matco/wheeltab",
+	"description": "Switch tabs using your mouse wheel",
+	"version": "0.0.4",
+	"scripts": {
+		"lint": "eslint ."
+	},
+	"type": "module",
+	"keywords": [],
+	"author": {
+		"name": "Matthieu Corageoud",
+		"email": "matthieu.corageoud@gmail.com"
+	},
+	"license": "Unlicense",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/matco/wheelab.git"
+	},
+	"bugs": {
+		"url": "https://github.com/matco/wheelab/issues"
+	},
+	"devDependencies": {
+		"eslint": "^8.3.0"
+	}
+}
