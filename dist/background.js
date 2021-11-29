@@ -10,7 +10,7 @@ function debug() {
 //manually inject content script code after installation or update
 if(chrome.runtime.onInstalled) {
 	chrome.runtime.onInstalled.addListener(details => {
-		if(details.reason === 'install') {
+		if(details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
 			debug('inject script in tabs');
 			const script = chrome.runtime.getManifest().content_scripts[0].js[0];
 			chrome.windows.getAll({populate: true}, windows => {
