@@ -18,6 +18,8 @@ if(chrome.runtime.onInstalled) {
 					.flatMap(w => w.tabs)
 					//exclude internal chrome/firefox web pages
 					.filter(t => !t.url.startsWith('chrome') && !t.url.startsWith('about'))
+					//inject script only in tabs that are loaded
+					.filter(t => t.status === 'complete')
 					.forEach(tab => {
 						try {
 							chrome.scripting.executeScript({
