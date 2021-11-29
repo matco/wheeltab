@@ -21,16 +21,8 @@ if(chrome.runtime.onInstalled) {
 					//inject script only in tabs that are loaded
 					.filter(t => t.status === 'complete')
 					.forEach(tab => {
-						try {
-							chrome.scripting.executeScript({
-								target: {tabId: tab.id},
-								files: [script]
-							});
-						}
-						catch(exception) {
-							console.error(exception);
-							//this may fail for some kind of tab
-						}
+						const parameters = {target: {tabId: tab.id}, files: [script]};
+						chrome.scripting.executeScript(parameters).catch(e => console.error(`Unable to inject script in tab ${tab.id} (url: ${tab.url}): ${e}`));
 					});
 			});
 		}
