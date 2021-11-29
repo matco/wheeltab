@@ -19,35 +19,39 @@ function filter_tab(tab) {
 function draw_item(tab, index) {
 	const item = document.createElement('li');
 	item.dataset.id = tab.id;
-	//icon
-	if(tab.icon) {
-		const icon = document.createElement('img');
-		icon.setAttribute('src', tab.icon);
-		icon.setAttribute('alt', 'Tab icon');
-		icon.style.width = '16px';
-		icon.style.height = '16px';
-		icon.style.marginRight = '5px';
-		icon.style.verticalAlign = 'bottom';
-		item.appendChild(icon);
-	}
-	//text
-	item.appendChild(document.createTextNode(tab.title || tab.url));
-	//style
 	item.style.fontFamily = 'Arial';
-	item.style.fontSize = '14px';
+	item.style.fontSize = '16px';
 	item.style.overflow = 'hidden';
 	item.style.whiteSpace = 'nowrap';
 	item.style.textOverflow = 'ellipsis';
 	item.style.padding = '4px';
 	item.style.margin = '0';
+	item.style.color = '#333';
 	if(tab.active) {
 		selected_item = index;
 		item.style.backgroundColor = '#333';
 		item.style.color = 'white';
 	}
 	if(index !== 0) {
-		item.style.borderTop = '1px solid #999';
+		item.style.borderTop = '1px solid #333';
 	}
+	//icon
+	if(tab.icon) {
+		const icon = document.createElement('img');
+		icon.setAttribute('src', tab.icon);
+		icon.setAttribute('alt', 'Tab favicon');
+		icon.style.width = '16px';
+		icon.style.height = '16px';
+		icon.style.marginRight = '5px';
+		icon.style.verticalAlign = 'text-bottom';
+		icon.style.display = 'inline';
+		item.appendChild(icon);
+	}
+	else {
+		item.style.paddingLeft = '25px';
+	}
+	//text
+	item.appendChild(document.createTextNode(tab.title || tab.url));
 	return item;
 }
 
@@ -57,6 +61,7 @@ function select_item(index) {
 		if(i === index) {
 			item.style.backgroundColor = '#333';
 			item.style.color = 'white';
+			item.scrollIntoView();
 		}
 		else {
 			item.style.backgroundColor = '';
@@ -70,8 +75,9 @@ function manage_wheel(event) {
 	if(menu.style.display !== 'block') {
 		prevent_context_menu = true;
 		//position menu
-		menu.style.left = `${event.clientX}px`;
-		menu.style.top = `${event.clientY}px`;
+		menu.style.left = '50%';
+		menu.style.transform = 'translate(-50%)';
+		menu.style.top = '10%';
 		menu.style.display = 'block';
 	}
 	if(event.deltaY < 0) {
@@ -101,18 +107,21 @@ function load_menu(event) {
 		//create menu
 		debug('wheeltab - load menu');
 		menu = document.createElement('ul');
-		menu.style.minWidth = '250px';
-		menu.style.maxWidth = '500px';
+		menu.style.width = '500px';
+		menu.style.maxWidth = '80%';
+		menu.style.maxHeight = '80%';
+		menu.style.overflowY = 'auto';
 		menu.style.position = 'fixed';
 		menu.style.listStyle = 'none';
 		menu.style.textAlign = 'left';
 		menu.style.backgroundColor = 'white';
 		menu.style.margin = '0';
 		menu.style.padding = '0';
-		menu.style.border = '2px solid #999';
-		menu.style.borderRadius = '2px';
+		menu.style.border = '2px solid black';
+		menu.style.borderRadius = '5px';
 		menu.style.display = 'none';
 		menu.style.zIndex = '99999999999999';
+		menu.style.boxShadow = '0 0 30px 0 black';
 		document.body.appendChild(menu);
 		//reset selected item
 		selected_item = undefined;
