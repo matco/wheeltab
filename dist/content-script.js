@@ -24,16 +24,20 @@ function draw_item(tab, index) {
 	item.style.overflow = 'hidden';
 	item.style.whiteSpace = 'nowrap';
 	item.style.textOverflow = 'ellipsis';
-	item.style.padding = '4px';
+	item.style.padding = '5px';
 	item.style.margin = '0';
-	item.style.color = '#333';
+	item.style.lineHeight = '100%';
+	if(index !== 0) {
+		item.style.borderTop = '1px solid #333';
+	}
 	if(tab.active) {
 		selected_item = index;
 		item.style.backgroundColor = '#333';
 		item.style.color = 'white';
 	}
-	if(index !== 0) {
-		item.style.borderTop = '1px solid #333';
+	else {
+		item.style.backgroundColor = 'white';
+		item.style.color = '#333';
 	}
 	//icon
 	if(tab.icon) {
@@ -64,8 +68,8 @@ function select_item(index) {
 			item.scrollIntoView();
 		}
 		else {
-			item.style.backgroundColor = '';
-			item.style.color = '';
+			item.style.backgroundColor = 'white';
+			item.style.color = '#333';
 		}
 	});
 }
@@ -74,10 +78,6 @@ function manage_wheel(event) {
 	debug('wheeltab - wheel event');
 	if(menu.style.display !== 'block') {
 		prevent_context_menu = true;
-		//position menu
-		menu.style.left = '50%';
-		menu.style.transform = 'translate(-50%)';
-		menu.style.top = '10%';
 		menu.style.display = 'block';
 	}
 	if(event.deltaY < 0) {
@@ -107,20 +107,25 @@ function load_menu(event) {
 		//create menu
 		debug('wheeltab - load menu');
 		menu = document.createElement('ul');
+		menu.style.display = 'none';
+		menu.style.zIndex = '99999999999999';
+		//position
+		menu.style.position = 'fixed';
+		menu.style.left = '50%';
+		menu.style.transform = 'translate(-50%)';
+		menu.style.top = '10%';
+		//size
 		menu.style.width = '500px';
 		menu.style.maxWidth = '80%';
 		menu.style.maxHeight = '80%';
 		menu.style.overflowY = 'auto';
-		menu.style.position = 'fixed';
-		menu.style.listStyle = 'none';
-		menu.style.textAlign = 'left';
-		menu.style.backgroundColor = 'white';
-		menu.style.margin = '0';
-		menu.style.padding = '0';
+		//border
 		menu.style.border = '2px solid black';
 		menu.style.borderRadius = '5px';
-		menu.style.display = 'none';
-		menu.style.zIndex = '99999999999999';
+		//miscellaneous
+		menu.style.listStyle = 'none';
+		menu.style.margin = '0';
+		menu.style.padding = '0';
 		menu.style.boxShadow = '0 0 30px 0 black';
 		document.body.appendChild(menu);
 		//reset selected item
