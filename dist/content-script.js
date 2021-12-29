@@ -10,7 +10,7 @@ function debug() {
 let menu; //current menu
 let selected_item; //index of selected item in menu
 
-let prevent_context_menu;
+let mouse_moved = false;
 
 function filter_tab(tab) {
 	return !tab.url.startsWith('chrome');
@@ -76,34 +76,36 @@ function select_item(index) {
 
 function manage_wheel(event) {
 	debug('wheeltab - wheel event');
-	if(menu.style.display !== 'block') {
-		prevent_context_menu = true;
+	if(!mouse_moved && menu.style.display !== 'block') {
 		menu.style.display = 'block';
 	}
-	if(event.deltaY < 0) {
-		if(selected_item === undefined || selected_item === 0) {
-			selected_item = menu.children.length - 1;
+	if(menu.style.display === 'block') {
+		if(event.deltaY < 0) {
+			if(selected_item === undefined || selected_item === 0) {
+				selected_item = menu.children.length - 1;
+			}
+			else {
+				selected_item--;
+			}
+			select_item(selected_item);
 		}
 		else {
-			selected_item--;
+			if(selected_item === undefined || selected_item === menu.children.length - 1) {
+				selected_item = 0;
+			}
+			else {
+				selected_item++;
+			}
+			select_item(selected_item);
 		}
-		select_item(selected_item);
+		event.stopPropagation();
+		event.preventDefault();
 	}
-	else {
-		if(selected_item === undefined || selected_item === menu.children.length - 1) {
-			selected_item = 0;
-		}
-		else {
-			selected_item++;
-		}
-		select_item(selected_item);
-	}
-	event.stopPropagation();
-	event.preventDefault();
 }
 
 function load_menu(event) {
-	if(event.button === 2) {
+	if(event.button === 0) {
+		mouse_moved = false;
 		//create menu
 		debug('wheeltab - load menu');
 		menu = document.createElement('ul');
@@ -139,15 +141,15 @@ function load_menu(event) {
 				.forEach(Node.prototype.appendChild, menu);
 		});
 		//add listeners
-		window.addEventListener('mouseup', close_menu, {once: true});
-		window.addEventListener('wheel', manage_wheel, {passive: false});
+		document.addEventListener('mouseup', close_menu, {once: true});
+		document.addEventListener('wheel', manage_wheel, {passive: false});
 	}
 }
 
 function close_menu() {
 	debug('wheeltab - close menu');
 	//remove listeners
-	window.removeEventListener('wheel', manage_wheel);
+	document.removeEventListener('wheel', manage_wheel);
 	//ask to select tab
 	debug(`wheeltab - go to tab ${selected_item}`);
 	if(selected_item !== undefined) {
@@ -160,12 +162,4 @@ function close_menu() {
 
 document.addEventListener('mousedown', load_menu);
 
-document.addEventListener(
-	'contextmenu',
-	event => {
-		if(prevent_context_menu) {
-			prevent_context_menu = false;
-			event.preventDefault();
-		}
-	}
-);
+document.addEventListener('mousemove', () => mouse_moved = true);
