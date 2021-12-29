@@ -12,10 +12,6 @@ let selected_item; //index of selected item in menu
 
 let mouse_moved = false;
 
-function filter_tab(tab) {
-	return !tab.url.startsWith('chrome');
-}
-
 function draw_item(tab, index) {
 	const item = document.createElement('li');
 	item.dataset.id = tab.id;
@@ -133,13 +129,7 @@ function load_menu(event) {
 		//reset selected item
 		selected_item = undefined;
 		//ask for tabs
-		chrome.runtime.sendMessage({task: 'retrieve_tabs'}, tabs => {
-			//exclude internal chrome web pages and draw other tabs in menu
-			tabs
-				.filter(filter_tab)
-				.map(draw_item)
-				.forEach(Node.prototype.appendChild, menu);
-		});
+		chrome.runtime.sendMessage({task: 'retrieve_tabs'}, tabs => tabs.map(draw_item).forEach(Node.prototype.appendChild, menu));
 		//add listeners
 		document.addEventListener('mouseup', close_menu, {once: true});
 		document.addEventListener('wheel', manage_wheel, {passive: false});

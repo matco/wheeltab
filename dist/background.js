@@ -7,6 +7,10 @@ function debug() {
 	}
 }
 
+function filter_tab(tab) {
+	return !tab.url.startsWith('chrome') && !tab.url.startsWith('about');
+}
+
 //manually inject content script code after installation or update
 if(chrome.runtime.onInstalled) {
 	chrome.runtime.onInstalled.addListener(details => {
@@ -17,7 +21,7 @@ if(chrome.runtime.onInstalled) {
 				windows
 					.flatMap(w => w.tabs)
 					//exclude internal chrome/firefox web pages
-					.filter(t => !t.url.startsWith('chrome') && !t.url.startsWith('about'))
+					.filter(filter_tab)
 					//inject script only in tabs that are loaded
 					.filter(t => t.status === 'complete')
 					.forEach(tab => {
@@ -34,7 +38,7 @@ chrome.runtime.onMessage.addListener((message, _, send) => {
 	switch(message.task) {
 		case 'retrieve_tabs':
 			chrome.tabs.query({currentWindow: true}, tabs => {
-				const simple_tabs = tabs.map(t => ({id: t.id, title: t.title, url: t.url, icon: t.favIconUrl, active: t.active}));
+				const simple_tabs = tabs.filter(filter_tab).map(t => ({id: t.id, title: t.title, url: t.url, icon: t.favIconUrl, active: t.active}));
 				debug('return tabs', simple_tabs);
 				send(simple_tabs);
 			});
