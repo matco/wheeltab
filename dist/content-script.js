@@ -10,9 +10,10 @@ function debug() {
 let menu; //current menu
 let selected_item; //index of selected item in menu
 
-let mouse_moved = false;
 let keydown_abort;
+let wheel_abort;
 let mouseup_abort;
+let mousemove_abort;
 
 function draw_item(tab, index) {
 	const item = document.createElement('li');
@@ -74,7 +75,7 @@ function select_item(index) {
 
 function manage_wheel(event) {
 	debug('wheeltab - wheel event');
-	if(!mouse_moved && menu.style.display !== 'block') {
+	if(menu.style.display !== 'block') {
 		menu.style.display = 'block';
 	}
 	if(menu.style.display === 'block') {
@@ -103,9 +104,10 @@ function manage_wheel(event) {
 
 function load_menu(event) {
 	if(event.button === 0) {
-		mouse_moved = false;
+		wheel_abort = new AbortController();
 		mouseup_abort = new AbortController();
 		keydown_abort = new AbortController();
+		mousemove_abort = new AbortController();
 		//create menu
 		debug('wheeltab - load menu');
 		menu = document.createElement('ul');
@@ -137,7 +139,8 @@ function load_menu(event) {
 		//add listeners
 		document.addEventListener('keydown', escape_menu, {once: true, signal: keydown_abort.signal});
 		document.addEventListener('mouseup', open_selected_item, {once: true, signal: mouseup_abort.signal});
-		document.addEventListener('wheel', manage_wheel, {passive: false});
+		document.addEventListener('wheel', manage_wheel, {passive: false, signal: wheel_abort.signal});
+		document.addEventListener('mousemove', prevent_menu, {once: true, signal: mousemove_abort.signal});
 	}
 }
 
@@ -145,6 +148,10 @@ function escape_menu(event) {
 	if(event.key === 'Escape') {
 		close_menu();
 	}
+}
+
+function prevent_menu() {
+	wheel_abort.abort();
 }
 
 function open_selected_item() {
@@ -160,13 +167,12 @@ function open_selected_item() {
 function close_menu() {
 	debug('wheeltab - close menu');
 	//remove or abort listeners
-	mouseup_abort.abort();
 	keydown_abort.abort();
-	document.removeEventListener('wheel', manage_wheel);
+	mouseup_abort.abort();
+	wheel_abort.abort();
+	mousemove_abort.abort();
 	//destroy menu
 	document.body.removeChild(menu);
 }
 
 document.addEventListener('mousedown', load_menu);
-
-document.addEventListener('mousemove', () => mouse_moved = true);
