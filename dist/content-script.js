@@ -11,6 +11,8 @@ let menu; //current menu
 let selected_item; //index of selected item in menu
 
 let mouse_moved = false;
+let keydown_abort;
+let mouseup_abort;
 
 function draw_item(tab, index) {
 	const item = document.createElement('li');
@@ -102,6 +104,8 @@ function manage_wheel(event) {
 function load_menu(event) {
 	if(event.button === 0) {
 		mouse_moved = false;
+		mouseup_abort = new AbortController();
+		keydown_abort = new AbortController();
 		//create menu
 		debug('wheeltab - load menu');
 		menu = document.createElement('ul');
@@ -131,21 +135,34 @@ function load_menu(event) {
 		//ask for tabs
 		chrome.runtime.sendMessage({task: 'retrieve_tabs'}, tabs => tabs.map(draw_item).forEach(Node.prototype.appendChild, menu));
 		//add listeners
-		document.addEventListener('mouseup', close_menu, {once: true});
+		document.addEventListener('keydown', escape_menu, {once: true, signal: keydown_abort.signal});
+		document.addEventListener('mouseup', open_selected_item, {once: true, signal: mouseup_abort.signal});
 		document.addEventListener('wheel', manage_wheel, {passive: false});
 	}
 }
 
-function close_menu() {
-	debug('wheeltab - close menu');
-	//remove listeners
-	document.removeEventListener('wheel', manage_wheel);
+function escape_menu(event) {
+	if(event.key === 'Escape') {
+		close_menu();
+	}
+}
+
+function open_selected_item() {
 	//ask to select tab
 	debug(`wheeltab - go to tab ${selected_item}`);
 	if(selected_item !== undefined) {
 		const tab_id = parseInt(menu.children[selected_item].dataset.id);
 		chrome.runtime.sendMessage({task: 'select_tab', id: tab_id});
 	}
+	close_menu();
+}
+
+function close_menu() {
+	debug('wheeltab - close menu');
+	//remove or abort listeners
+	mouseup_abort.abort();
+	keydown_abort.abort();
+	document.removeEventListener('wheel', manage_wheel);
 	//destroy menu
 	document.body.removeChild(menu);
 }
