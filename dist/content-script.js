@@ -104,12 +104,12 @@ function manage_wheel(event) {
 
 function load_menu(event) {
 	if(event.button === 0) {
+		//create menu
+		debug('wheeltab - load menu');
 		wheel_abort = new AbortController();
 		mouseup_abort = new AbortController();
 		keydown_abort = new AbortController();
 		mousemove_abort = new AbortController();
-		//create menu
-		debug('wheeltab - load menu');
 		menu = document.createElement('ul');
 		menu.style.display = 'none';
 		menu.style.zIndex = '99999999999999';
