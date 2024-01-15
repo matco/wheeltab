@@ -5,6 +5,9 @@
 	"scripts": {
 		"lint": "eslint ."
 	},
+	"files": [
+		"/dist"
+	],
 	"type": "module",
 	"keywords": [],
 	"author": {
