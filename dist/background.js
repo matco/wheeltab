@@ -20,7 +20,7 @@ if(chrome.runtime.onInstalled) {
 			chrome.windows.getAll({populate: true}, windows => {
 				windows
 					.flatMap(w => w.tabs)
-					//exclude internal chrome/firefox web pages
+					//exclude internal Chrome/Firefox web pages
 					.filter(filter_tab)
 					//inject script only in tabs that are loaded
 					.filter(t => t.status === 'complete')
