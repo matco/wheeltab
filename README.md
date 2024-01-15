@@ -5,8 +5,9 @@ Wheeltab is a browser extension that allows you to navigate through your open ta
 Press and hold the left button of your mouse, without moving your mouse. Then, use your mouse wheel to scroll through the list of open tabs in the menu that will appear. Release the left button to jump to the highlighted tab. Use the "Escape" key to close the menu and stay on the current tab.
 
 ## Compatibility
-This extension is compatible with browsers that support web extensions v3 (only Chrome at the moment).
-It is available on the Chrome web store [here](https://chrome.google.com/webstore/detail/wheeltab/acipnfeildejkaebclgfajogkmilgldh) and a previous version (using web extensions v2) is available on  Mozilla add-ons website [here](https://addons.mozilla.org/en-us/firefox/addon/wheeltab).
+This extension is theoretically compatible with browsers that support web extensions v3 (also known as Manifest v3). However, with Firefox, it seems it is no longer possible to properly get the permission to inject a script on any website.
+
+The extension is available on the Chrome web store [here](https://chrome.google.com/webstore/detail/wheeltab/acipnfeildejkaebclgfajogkmilgldh).
 
 ## Permissions
 Here are the justification of the permission as presented in the Chrome web store developer dashboard.
