@@ -102,6 +102,37 @@ function manage_wheel(event) {
 	}
 }
 
+function close_menu() {
+	debug('wheeltab - close menu');
+	//remove or abort listeners
+	keydown_abort.abort();
+	mouseup_abort.abort();
+	wheel_abort.abort();
+	mousemove_abort.abort();
+	//destroy menu
+	document.body.removeChild(menu);
+}
+
+function open_selected_item() {
+	//ask to select tab
+	debug(`wheeltab - go to tab ${selected_item}`);
+	if(selected_item !== undefined) {
+		const tab_id = parseInt(menu.children[selected_item].dataset.id);
+		chrome.runtime.sendMessage({task: 'select_tab', id: tab_id});
+	}
+	close_menu();
+}
+
+function escape_menu(event) {
+	if(event.key === 'Escape') {
+		close_menu();
+	}
+}
+
+function prevent_menu() {
+	wheel_abort.abort();
+}
+
 function load_menu(event) {
 	if(event.button === 0) {
 		//create menu
@@ -142,37 +173,6 @@ function load_menu(event) {
 		document.addEventListener('wheel', manage_wheel, {passive: false, signal: wheel_abort.signal});
 		document.addEventListener('mousemove', prevent_menu, {once: true, signal: mousemove_abort.signal});
 	}
-}
-
-function escape_menu(event) {
-	if(event.key === 'Escape') {
-		close_menu();
-	}
-}
-
-function prevent_menu() {
-	wheel_abort.abort();
-}
-
-function open_selected_item() {
-	//ask to select tab
-	debug(`wheeltab - go to tab ${selected_item}`);
-	if(selected_item !== undefined) {
-		const tab_id = parseInt(menu.children[selected_item].dataset.id);
-		chrome.runtime.sendMessage({task: 'select_tab', id: tab_id});
-	}
-	close_menu();
-}
-
-function close_menu() {
-	debug('wheeltab - close menu');
-	//remove or abort listeners
-	keydown_abort.abort();
-	mouseup_abort.abort();
-	wheel_abort.abort();
-	mousemove_abort.abort();
-	//destroy menu
-	document.body.removeChild(menu);
 }
 
 document.addEventListener('mousedown', load_menu);
