@@ -166,7 +166,7 @@ function load_menu(event) {
 		//reset selected item
 		selected_item = undefined;
 		//ask for tabs
-		chrome.runtime.sendMessage({task: 'retrieve_tabs'}, tabs => tabs.map(draw_item).forEach(Node.prototype.appendChild, menu));
+		chrome.runtime.sendMessage({task: 'retrieve_tabs'}).then(tabs => tabs.map(draw_item).forEach(Node.prototype.appendChild, menu));
 		//add listeners
 		document.addEventListener('keydown', escape_menu, {once: true, signal: keydown_abort.signal});
 		document.addEventListener('mouseup', open_selected_item, {once: true, signal: mouseup_abort.signal});

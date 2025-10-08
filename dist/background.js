@@ -17,7 +17,7 @@ if(chrome.runtime.onInstalled) {
 		if(details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
 			debug('inject script in tabs');
 			const script = chrome.runtime.getManifest().content_scripts[0].js[0];
-			chrome.windows.getAll({populate: true}, windows => {
+			chrome.windows.getAll({populate: true}).then(windows => {
 				windows
 					.flatMap(w => w.tabs)
 					//exclude internal Chrome/Firefox web pages
@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener((message, _, send) => {
 	debug('receive message', message);
 	switch(message.task) {
 		case 'retrieve_tabs':
-			chrome.tabs.query({currentWindow: true}, tabs => {
+			chrome.tabs.query({currentWindow: true}).then(tabs => {
 				const simple_tabs = tabs.filter(filter_tab).map(t => ({id: t.id, title: t.title, url: t.url, icon: t.favIconUrl, active: t.active}));
 				debug('return tabs', simple_tabs);
 				send(simple_tabs);
