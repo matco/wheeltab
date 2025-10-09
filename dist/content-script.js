@@ -1,3 +1,8 @@
+const MessageTasks = Object.freeze({
+	RETRIEVE_TABS: 'retrieve_tabs',
+	SELECT_TAB: 'select_tab'
+});
+
 //set to true to enable debug to console
 const debug_mode = false;
 
@@ -118,7 +123,7 @@ function open_selected_item() {
 	debug(`wheeltab - go to tab ${selected_item}`);
 	if(selected_item !== undefined) {
 		const tab_id = parseInt(menu.children[selected_item].dataset.id);
-		chrome.runtime.sendMessage({task: 'select_tab', id: tab_id});
+		chrome.runtime.sendMessage({task: MessageTasks.SELECT_TAB, id: tab_id});
 	}
 	close_menu();
 }
@@ -166,7 +171,7 @@ function load_menu(event) {
 		//reset selected item
 		selected_item = undefined;
 		//ask for tabs
-		chrome.runtime.sendMessage({task: 'retrieve_tabs'}).then(tabs => tabs.map(draw_item).forEach(Node.prototype.appendChild, menu));
+		chrome.runtime.sendMessage({task: MessageTasks.RETRIEVE_TABS}).then(tabs => tabs.map(draw_item).forEach(Node.prototype.appendChild, menu));
 		//add listeners
 		document.addEventListener('keydown', escape_menu, {once: true, signal: keydown_abort.signal});
 		document.addEventListener('mouseup', open_selected_item, {once: true, signal: mouseup_abort.signal});

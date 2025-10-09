@@ -1,3 +1,8 @@
+const MessageTasks = Object.freeze({
+	RETRIEVE_TABS: 'retrieve_tabs',
+	SELECT_TAB: 'select_tab'
+});
+
 //set to true to enable debug to console
 const debug_mode = false;
 
@@ -36,14 +41,14 @@ if(chrome.runtime.onInstalled) {
 chrome.runtime.onMessage.addListener((message, _, send) => {
 	debug('receive message', message);
 	switch(message.task) {
-		case 'retrieve_tabs':
+		case MessageTasks.RETRIEVE_TABS:
 			chrome.tabs.query({currentWindow: true}).then(tabs => {
 				const simple_tabs = tabs.filter(filter_tab).map(t => ({id: t.id, title: t.title, url: t.url, icon: t.favIconUrl, active: t.active}));
 				debug('return tabs', simple_tabs);
 				send(simple_tabs);
 			});
 			break;
-		case 'select_tab':
+		case MessageTasks.SELECT_TAB:
 			chrome.tabs.update(message.id, {active: true});
 			debug('select tab', message.id);
 			break;
