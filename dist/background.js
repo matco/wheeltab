@@ -20,8 +20,8 @@ function filter_tab(tab) {
 if(chrome.runtime.onInstalled) {
 	chrome.runtime.onInstalled.addListener(details => {
 		if(details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-			debug('inject script in tabs');
-			const script = chrome.runtime.getManifest().content_scripts[0].js[0];
+			debug('inject scripts in tabs');
+			const scripts = chrome.runtime.getManifest().content_scripts[0].js;
 			chrome.windows.getAll({populate: true}).then(windows => {
 				windows
 					.flatMap(w => w.tabs)
@@ -30,7 +30,7 @@ if(chrome.runtime.onInstalled) {
 					//inject script only in tabs that are loaded
 					.filter(t => t.status === 'complete')
 					.forEach(tab => {
-						const parameters = {target: {tabId: tab.id}, files: [script]};
+						const parameters = {target: {tabId: tab.id}, files: scripts};
 						chrome.scripting.executeScript(parameters).catch(e => console.error(`Unable to inject script in tab ${tab.id} (url: ${tab.url}): ${e}`));
 					});
 			});
