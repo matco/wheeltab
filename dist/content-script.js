@@ -83,28 +83,26 @@ function manage_wheel(event) {
 	if(menu.style.display !== 'block') {
 		menu.style.display = 'block';
 	}
-	if(menu.style.display === 'block') {
-		if(event.deltaY < 0) {
-			if(selected_item === undefined || selected_item === 0) {
-				selected_item = menu.children.length - 1;
-			}
-			else {
-				selected_item--;
-			}
-			select_item(selected_item);
+	if(event.deltaY < 0) {
+		if(selected_item === undefined || selected_item === 0) {
+			selected_item = menu.children.length - 1;
 		}
 		else {
-			if(selected_item === undefined || selected_item === menu.children.length - 1) {
-				selected_item = 0;
-			}
-			else {
-				selected_item++;
-			}
-			select_item(selected_item);
+			selected_item--;
 		}
-		event.stopPropagation();
-		event.preventDefault();
+		select_item(selected_item);
 	}
+	else {
+		if(selected_item === undefined || selected_item === menu.children.length - 1) {
+			selected_item = 0;
+		}
+		else {
+			selected_item++;
+		}
+		select_item(selected_item);
+	}
+	event.stopPropagation();
+	event.preventDefault();
 }
 
 function close_menu() {
