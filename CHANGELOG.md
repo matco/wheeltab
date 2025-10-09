@@ -4,6 +4,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.0.5] - 2025-10-09
+### Added
+- Allow the mouse to be moved once the menu is open.
+- Improve menu design.
+
+### Changed
+- Update dependencies.
+- Use promises instead of callbacks in extension API calls.
+
+### Fixed
+- Prevent errors if the extension is no longer running.
+
 ## [0.0.4] - 2021-12-29
 ### Added
 - Trigger the tab menu using the left button instead of the right button to support all desktop environments.
@@ -34,7 +46,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Initial version.
 
-[Unreleased]: https://github.com/matco/wheeltab/compare/v0.0.4...HEAD
+[Unreleased]: https://github.com/matco/wheeltab/compare/v0.0.5...HEAD
+[0.0.4]: https://github.com/matco/wheeltab/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/matco/wheeltab/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/matco/wheeltab/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/matco/wheeltab/compare/v0.0.1...v0.0.2
