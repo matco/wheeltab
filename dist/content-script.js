@@ -12,6 +12,8 @@ function debug() {
 	}
 }
 
+const MOVE_THRESHOLD = 10; //pixels
+
 let dialog; //current dialog
 let menu; //current menu
 let selected_item; //index of selected item in menu
@@ -20,6 +22,8 @@ let keydown_abort;
 let wheel_abort;
 let mouseup_abort;
 let mousemove_abort;
+
+let mouse_coordinates;
 
 function draw_item(tab, index) {
 	const item = document.createElement('li');
@@ -84,6 +88,8 @@ function select_item(index) {
 function manage_wheel(event) {
 	debug('wheeltab - wheel event');
 	if(!dialog.open) {
+		//once the menu is open, the mouse can be moved
+		mousemove_abort.abort();
 		dialog.showModal();
 	}
 	if(event.deltaY < 0) {
@@ -136,12 +142,17 @@ function escape_menu(event) {
 	}
 }
 
-function prevent_menu() {
-	wheel_abort.abort();
+function prevent_menu(event) {
+	const coordinates = {x: event.clientX, y: event.clientY};
+	if(Math.sqrt(Math.pow(coordinates.x - mouse_coordinates.x, 2) + Math.pow(coordinates.y - mouse_coordinates.y, 2)) > MOVE_THRESHOLD) {
+		wheel_abort.abort();
+	}
 }
 
 function load_menu(event) {
 	if(event.button === 0) {
+		//store the position of the mouse
+		mouse_coordinates = {x: event.clientX, y: event.clientY};
 		//create menu
 		debug('wheeltab - load menu');
 		wheel_abort = new AbortController();
