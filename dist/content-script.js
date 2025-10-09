@@ -143,6 +143,11 @@ function prevent_menu() {
 }
 
 function load_menu(event) {
+	//check if the extension is still in the right state
+	//this may not be the case if the extension has been disabled or uninstalled
+	if(!chrome.runtime?.id) {
+		return;
+	}
 	if(event.button === 0) {
 		//create menu
 		debug('wheeltab - load menu');
