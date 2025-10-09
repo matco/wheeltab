@@ -150,6 +150,11 @@ function prevent_menu(event) {
 }
 
 function load_menu(event) {
+	//check if the extension is still in the right state
+	//this may not be the case if the extension has been disabled or uninstalled
+	if(!chrome.runtime?.id) {
+		return;
+	}
 	if(event.button === 0) {
 		//store the position of the mouse
 		mouse_coordinates = {x: event.clientX, y: event.clientY};
