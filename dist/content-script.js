@@ -84,6 +84,8 @@ function select_item(index) {
 function manage_wheel(event) {
 	debug('wheeltab - wheel event');
 	if(!dialog.open) {
+		//once the menu is open, the mouse can be moved
+		mousemove_abort.abort();
 		dialog.showModal();
 	}
 	if(event.deltaY < 0) {
