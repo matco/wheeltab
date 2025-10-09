@@ -12,6 +12,7 @@ function debug() {
 	}
 }
 
+let dialog; //current dialog
 let menu; //current menu
 let selected_item; //index of selected item in menu
 
@@ -25,12 +26,14 @@ function draw_item(tab, index) {
 	item.dataset.id = tab.id;
 	item.style.fontFamily = 'Arial';
 	item.style.fontSize = '16px';
+	item.style.fontWeight = 'normal';
 	item.style.overflow = 'hidden';
 	item.style.whiteSpace = 'nowrap';
 	item.style.textOverflow = 'ellipsis';
+	item.style.textAlign = 'left';
 	item.style.padding = '5px';
 	item.style.margin = '0';
-	item.style.lineHeight = '100%';
+	item.style.lineHeight = 'auto';
 	if(index !== 0) {
 		item.style.borderTop = '1px solid #333';
 	}
@@ -80,8 +83,8 @@ function select_item(index) {
 
 function manage_wheel(event) {
 	debug('wheeltab - wheel event');
-	if(menu.style.display !== 'block') {
-		menu.style.display = 'block';
+	if(!dialog.open) {
+		dialog.showModal();
 	}
 	if(event.deltaY < 0) {
 		if(selected_item === undefined || selected_item === 0) {
@@ -113,7 +116,8 @@ function close_menu() {
 	wheel_abort.abort();
 	mousemove_abort.abort();
 	//destroy menu
-	document.body.removeChild(menu);
+	dialog.close();
+	document.body.removeChild(dialog);
 }
 
 function open_selected_item() {
@@ -144,28 +148,38 @@ function load_menu(event) {
 		mouseup_abort = new AbortController();
 		keydown_abort = new AbortController();
 		mousemove_abort = new AbortController();
-		menu = document.createElement('ul');
-		menu.style.display = 'none';
-		menu.style.zIndex = '99999999999999';
-		//position
-		menu.style.position = 'fixed';
-		menu.style.left = '50%';
-		menu.style.transform = 'translate(-50%)';
-		menu.style.top = '10%';
+
+		dialog = document.createElement('dialog');
 		//size
-		menu.style.width = '500px';
-		menu.style.maxWidth = '80%';
-		menu.style.maxHeight = '80%';
-		menu.style.overflowY = 'auto';
+		dialog.style.width = '50vw';
+		dialog.style.left = '25vw';
+		dialog.style.maxHeight = '50vh';
+		dialog.style.top = '20vh';
+		dialog.style.overflowY = 'auto';
 		//border
-		menu.style.border = '2px solid black';
-		menu.style.borderRadius = '5px';
+		dialog.style.border = '2px solid black';
+		dialog.style.borderRadius = '5px';
 		//miscellaneous
-		menu.style.listStyle = 'none';
+		dialog.style.margin = '0';
+		dialog.style.padding = '0';
+		dialog.style.boxShadow = '0 0 30px 0 black';
+		dialog.style.userSelect = 'none';
+
+		const nav = document.createElement('nav');
+		dialog.appendChild(nav);
+
+		//put the content of the dialog in a shadow DOM
+		//it's only possible to start at the nav element level because the dialog tag does not support shadow DOM
+		const shadow = nav.attachShadow({mode: 'closed'});
+
+		menu = document.createElement('ol');
+		menu.style.display = 'block';
 		menu.style.margin = '0';
 		menu.style.padding = '0';
-		menu.style.boxShadow = '0 0 30px 0 black';
-		document.body.appendChild(menu);
+		menu.style.listStyle = 'none';
+		shadow.appendChild(menu);
+
+		document.body.appendChild(dialog);
 		//reset selected item
 		selected_item = undefined;
 		//ask for tabs
